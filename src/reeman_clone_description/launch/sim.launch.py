@@ -9,7 +9,8 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
-urdf_file_name = 'reeman_clone.solidwork.fortress.urdf.xacro'
+# urdf_file_name = 'reeman_clone.urdf.xacro'
+urdf_file_name = 'reeman_clone_fortress.urdf.xacro'
 
 def generate_launch_description():
     world_file = PathJoinSubstitution([
