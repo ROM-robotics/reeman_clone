@@ -1,5 +1,6 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, RegisterEventHandler, SetEnvironmentVariable, TimerAction
+from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import IncludeLaunchDescription
@@ -79,6 +80,7 @@ def generate_launch_description():
         package='ros_gz_sim',
         executable='create',
         output='screen',
+        parameters=[{'use_sim_time': True}],
         arguments=[
             '-topic', 'robot_description',
             '-name', 'diffbot',
@@ -97,6 +99,7 @@ def generate_launch_description():
             '--controller-manager', '/controller_manager',
             '--controller-manager-timeout', '120',
         ],
+        parameters=[{'use_sim_time': True}],
         output='screen',
     )
 
@@ -108,6 +111,7 @@ def generate_launch_description():
             '--controller-manager', '/controller_manager',
             '--controller-manager-timeout', '120',
         ],
+        parameters=[{'use_sim_time': True}],
         output='screen',
     )
 
@@ -115,12 +119,13 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         output='screen',
+        parameters=[{'use_sim_time': True}],
         arguments=[
             # Clock
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
             # IMU sensors
-            '/board_imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
-            '/usb_imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            '/imu/out@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            '/imu/wit/out@sensor_msgs/msg/Imu[gz.msgs.IMU',
             # RGB camera
             '/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
             '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
@@ -135,14 +140,13 @@ def generate_launch_description():
         ],
     )
 
-    # QoS relay: /cmd_vel (RELIABLE) → /diff_drive_controller/cmd_vel_unstamped (BEST_EFFORT)
-    # This allows teleop_twist_keyboard (and any standard publisher) to drive the robot
-    # without needing --qos-reliability best_effort flags.
-    cmd_vel_relay = Node(
-        package='reeman_clone_description',
-        executable='cmd_vel_relay.py',
-        name='cmd_vel_relay',
+    rqt_publisher_node = Node(
+        package='rqt_publisher',
+        executable='rqt_publisher',
+        name='rqt_publisher',
         output='screen',
+        parameters=[{'use_sim_time': True}],
+        condition=IfCondition(LaunchConfiguration('use_rqt_publisher')),
     )
 
     spawn_robot_delayed = TimerAction(period=2.0, actions=[spawn_robot])
@@ -153,12 +157,17 @@ def generate_launch_description():
             default_value=world_file,
             description='World file to load (default: sensors_world.sdf)',
         ),
+        DeclareLaunchArgument(
+            'use_rqt_publisher',
+            default_value='true',
+            description='Launch rqt_publisher GUI for manual topic publishing',
+        ),
         gz_resource_path,
         ign_resource_path,
         rsp_node,
         gz_sim,
         bridge_node,
-        cmd_vel_relay,
+        rqt_publisher_node,
         spawn_robot_delayed,
         RegisterEventHandler(
             OnProcessExit(

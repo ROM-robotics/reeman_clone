@@ -47,6 +47,6 @@ install(
 
 install(
   PROGRAMS
-    scripts/cmd_vel_relay.py
+    #scripts/cmd_vel_relay.py
   DESTINATION lib/${PROJECT_NAME}
 )

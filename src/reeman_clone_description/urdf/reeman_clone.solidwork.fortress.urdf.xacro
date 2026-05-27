@@ -2,7 +2,7 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot name="reeman_clone">
+<robot name="robot">
 
   <!-- ROM DYNAMICS ADD -->
   <link name="base_footprint"/>
@@ -29,11 +29,11 @@
     <axis xyz="0 0 0"/>
   </joint>
 
-  <link name="lidar_link"/>
-  <joint name="lidar_link_to_base_link" type="fixed">
+  <link name="laser"/>
+  <joint name="laser_to_base_link" type="fixed">
     <origin xyz="0.1 0 0.1" rpy="0 0 0"/>
     <parent link="base_link"/>
-    <child link="lidar_link"/>
+    <child link="laser"/>
     <axis xyz="0 0 0"/>
   </joint>
 
@@ -529,7 +529,10 @@
   </gazebo>
 
   <gazebo>
+    <!-- HARMONIC -->
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+    <!-- FORTRESS -->
+    <!-- <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlSystem"> -->
       <parameters>$(find reeman_clone_description)/config/diff_drive_controller.yaml</parameters>
     </plugin>
   </gazebo>
@@ -547,7 +550,7 @@
       <always_on>1</always_on>
       <update_rate>100</update_rate>
       <visualize>true</visualize>
-      <topic>/usb_imu/data</topic>
+      <topic>imu/out</topic>
       <imu>
         <angular_velocity>
           <x><noise type="gaussian"><mean>0</mean><stddev>2e-4</stddev></noise></x>
@@ -567,7 +570,7 @@
       <always_on>1</always_on>
       <update_rate>100</update_rate>
       <visualize>true</visualize>
-      <topic>/board_imu/data</topic>
+      <topic>imu/wit/out</topic>
       <imu>
         <angular_velocity>
           <x><noise type="gaussian"><mean>0</mean><stddev>2e-4</stddev></noise></x>
@@ -644,7 +647,7 @@
   </gazebo>
 
   <!-- GPU Lidar sensor (360° 2D scan) -->
-  <gazebo reference="lidar_link">
+  <gazebo reference="laser">
     <sensor name="gpu_lidar_sensor" type="gpu_lidar">
       <topic>/lidar/scan</topic>
       <update_rate>10</update_rate>
