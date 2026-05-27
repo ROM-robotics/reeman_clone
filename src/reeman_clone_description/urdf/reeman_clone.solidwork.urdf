@@ -2,10 +2,51 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="reemen-clone">
-  <link
-    name="base_link">
+<robot name="reeman_clone">
+
+  <!-- ROM DYNAMICS ADD -->
+  <link name="base_footprint"/>
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="camera_link"/>
+  <joint name="camera_link_to_base_link" type="fixed">
+    <origin xyz="0.1 0 0.1" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="three_d_camera_link"/>
+  <joint name="three_d_camera_link_to_base_link" type="fixed">
+    <origin xyz="0.1 0 0.1" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="three_d_camera_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="lidar_link"/>
+  <joint name="lidar_link_to_base_link" type="fixed">
+    <origin xyz="0.1 0 0.1" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <link name="imu_link"/>
+  <joint name="imu_link_to_base_link" type="fixed">
+    <origin xyz="0.1 0 0.1" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <axis xyz="0 0 0"/>
+  </joint> 
+  <!-- ROM DYNAMICS END -->
+  
+  <link name="base_link">
     <inertial>
       <origin
         xyz="-0.006381 0.0039481 0.0009"
@@ -26,7 +67,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/base_link.STL" />
+          filename="package://reeman_clone_description/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +81,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/base_link.STL" />
+          filename="package://reeman_clone_description/meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -66,7 +107,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/right_wheel_link.STL" />
+          filename="package://reeman_clone_description/meshes/right_wheel_link.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +121,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/right_wheel_link.STL" />
+          filename="package://reeman_clone_description/meshes/right_wheel_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -119,7 +160,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/left_wheel_link.STL" />
+          filename="package://reeman_clone_description/meshes/left_wheel_link.STL" />
       </geometry>
       <material
         name="">
@@ -133,7 +174,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/left_wheel_link.STL" />
+          filename="package://reeman_clone_description/meshes/left_wheel_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -172,7 +213,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/front_right_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/front_right_caster_link.STL" />
       </geometry>
       <material
         name="">
@@ -186,7 +227,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/front_right_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/front_right_caster_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -225,7 +266,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/front_left_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/front_left_caster_link.STL" />
       </geometry>
       <material
         name="">
@@ -239,7 +280,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/front_left_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/front_left_caster_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -278,7 +319,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/back_right_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/back_right_caster_link.STL" />
       </geometry>
       <material
         name="">
@@ -292,7 +333,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/back_right_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/back_right_caster_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -331,7 +372,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/back_left_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/back_left_caster_link.STL" />
       </geometry>
       <material
         name="">
@@ -345,7 +386,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://reemen-clone/meshes/back_left_caster_link.STL" />
+          filename="package://reeman_clone_description/meshes/back_left_caster_link.STL" />
       </geometry>
     </collision>
   </link>

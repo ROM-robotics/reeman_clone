@@ -8,6 +8,7 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 
+urdf_file_name = 'reeman_clone.solidwork.fortress.urdf.xacro'
 
 def generate_launch_description():
     world_file = PathJoinSubstitution([
@@ -19,7 +20,7 @@ def generate_launch_description():
     xacro_file = PathJoinSubstitution([
         FindPackageShare('reeman_clone_description'),
         'urdf',
-        'reemen-clone.urdf.xacro'
+        urdf_file_name,
     ])
 
     robot_description = ParameterValue(
@@ -115,13 +116,22 @@ def generate_launch_description():
         executable='parameter_bridge',
         output='screen',
         arguments=[
+            # Clock
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
-            '/lidar/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-            '/imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
-            '/camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+            # IMU sensors
+            '/board_imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            '/usb_imu/data@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            # RGB camera
+            '/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
             '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
-            '/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            # 2D Lidar
+            '/lidar/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+            '/lidar/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            # 3D Camera (RGBD)
+            '/three_d_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
+            '/three_d_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+            '/three_d_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+            '/three_d_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
         ],
     )
 
