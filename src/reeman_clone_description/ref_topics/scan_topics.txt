@@ -1,0 +1,4 @@
+/default_robot1/global_costmap/scan
+/default_robot1/local_costmap/scan
+/default_robot1/scan
+/default_robot1/scan_matched_points2

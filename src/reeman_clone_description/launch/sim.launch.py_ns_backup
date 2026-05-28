@@ -1,40 +1,36 @@
+import os
+
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler, SetEnvironmentVariable, TimerAction
+from launch.actions import DeclareLaunchArgument, GroupAction, RegisterEventHandler, SetEnvironmentVariable, TimerAction
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.actions import IncludeLaunchDescription
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration, PathJoinSubstitution
-from launch_ros.actions import Node
+from launch_ros.actions import Node, PushRosNamespace
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
-import os
 
 # urdf_file_name = 'reeman_clone.urdf.xacro'
 urdf_file_name = 'reeman_clone_fortress.urdf.xacro'
 
 def generate_launch_description():
     robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', 'default_robot1')
-    robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '')
+
+    cm_name = f'/{robot_namespace}/controller_manager' if robot_namespace else '/controller_manager'
 
     world_file = PathJoinSubstitution([
-        FindPackageShare('reeman_clone_description'),
-        'worlds',
-        'sensors_world.sdf',
+        FindPackageShare('reeman_clone_description'), 'worlds', 'sensors_world.sdf',
     ])
 
     xacro_file = PathJoinSubstitution([
-        FindPackageShare('reeman_clone_description'),
-        'urdf',
-        urdf_file_name,
+        FindPackageShare('reeman_clone_description'), 'urdf', urdf_file_name,
     ])
 
     robot_description = ParameterValue(
         Command([
-            FindExecutable(name='xacro'),
-            ' ',
-            xacro_file,
+            FindExecutable(name='xacro'), ' ', xacro_file,
         ]),
         value_type=str,
     )
@@ -49,7 +45,6 @@ def generate_launch_description():
             {'use_sim_time': True},
         ],
     )
-
     gazebo_resource_path = PathJoinSubstitution([
         FindPackageShare('reeman_clone_description'),
         '..',
@@ -102,7 +97,7 @@ def generate_launch_description():
         executable='spawner',
         arguments=[
             'joint_state_broadcaster',
-            '--controller-manager', '/controller_manager',
+            '--controller-manager', cm_name,
             '--controller-manager-timeout', '120',
         ],
         parameters=[{'use_sim_time': True}],
@@ -114,7 +109,7 @@ def generate_launch_description():
         executable='spawner',
         arguments=[
             'diff_drive_controller',
-            '--controller-manager', '/controller_manager',
+            '--controller-manager', cm_name,
             '--controller-manager-timeout', '120',
         ],
         parameters=[{'use_sim_time': True}],
@@ -130,19 +125,19 @@ def generate_launch_description():
             # Clock
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
             # IMU sensors
-            '/imu/out@sensor_msgs/msg/Imu[gz.msgs.IMU',
-            '/imu/wit/out@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            f'/{robot_namespace}/imu/out@sensor_msgs/msg/Imu[gz.msgs.IMU',
+            f'/{robot_namespace}/imu/wit/out@sensor_msgs/msg/Imu[gz.msgs.IMU',
             # RGB camera
-            '/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+            f'/{robot_namespace}/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
+            f'/{robot_namespace}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
             # 2D Lidar
-            '/lidar/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-            '/lidar/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            f'/{robot_namespace}/lidar/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+            f'/{robot_namespace}/lidar/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
             # 3D Camera (RGBD)
-            '/three_d_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/three_d_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
-            '/three_d_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
-            '/three_d_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            f'/{robot_namespace}/three_d_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
+            f'/{robot_namespace}/three_d_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
+            f'/{robot_namespace}/three_d_camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
+            f'/{robot_namespace}/three_d_camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
         ],
     )
 
@@ -155,12 +150,12 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('use_rqt_publisher')),
     )
 
-    twist_mux_params = os.path.join(get_package_share_directory('reeman_clone_description'), 'config', 'twist_mux.yaml')
+    twist_mux_params = os.path.join(get_package_share_directory('bobo_controller'), 'config', 'twist_mux.yaml')
     twist_mux_node = Node(
         package="twist_mux",
         executable="twist_mux",
         parameters=[twist_mux_params],
-        remappings=[('cmd_vel_out', f'/{robot_namespace}/diff_controller/cmd_vel_unstamped' if robot_namespace else '/diff_controller/cmd_vel_unstamped')]
+        remappings=[('cmd_vel_out', f'/{robot_namespace}/diff_controller/cmd_vel_unstamped')]
     )
 
     rviz_config_file = PathJoinSubstitution([
@@ -197,23 +192,27 @@ def generate_launch_description():
         ),
         gz_resource_path,
         ign_resource_path,
-        rsp_node,
-        gz_sim,
-        bridge_node,
-        rqt_publisher_node,
         spawn_robot_delayed,
-        RegisterEventHandler(
-            OnProcessExit(
-                target_action=spawn_robot,
-                on_exit=[spawn_joint_state_broadcaster],
-            )
-        ),
-        RegisterEventHandler(
-            OnProcessExit(
-                target_action=spawn_joint_state_broadcaster,
-                on_exit=[spawn_diff_drive_controller],
-            )
-        ),
-        twist_mux_node,
-        rviz_node,
+        GroupAction([
+            PushRosNamespace(robot_namespace),
+            rsp_node,
+            gz_sim,
+            bridge_node,
+            rqt_publisher_node,
+            rviz_node,
+            #spawn_robot_delayed,
+            twist_mux_node,
+            RegisterEventHandler(
+                OnProcessExit(
+                    target_action=spawn_robot,
+                    on_exit=[spawn_joint_state_broadcaster],
+                )
+            ),
+            RegisterEventHandler(
+                OnProcessExit(
+                    target_action=spawn_joint_state_broadcaster,
+                    on_exit=[spawn_diff_drive_controller],
+                )
+            ),
+        ]),
     ])

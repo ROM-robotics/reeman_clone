@@ -1,0 +1,34 @@
+/**/twist_mux:
+  ros__parameters:
+    topics:
+      collision:
+        topic: cmd_vel_collision #cmd_vel_collision doesn't work 
+        timeout: 0.5
+        priority: 50
+      behavior:
+        topic: cmd_vel_bh_to_twist # behavior server and joystick from behavior server
+        timeout: 0.5
+        priority: 10
+      stt:
+        topic: cmd_vel_stt_to_twist # speech to text
+        timeout: 0.5
+        priority: 10
+      qt:
+        topic: cmd_vel_qt_to_twist # qt
+        timeout: 0.5
+        priority: 10
+      bhserver:
+        topic: cmd_vel_bhserver # behavior server
+        timeout: 0.5
+        priority: 10
+      voice_command:
+        topic: cmd_vel_voice_command
+        timeout: 0.5
+        priority: 50
+      smoother:
+        topic: cmd_vel_smoother_to_collision
+        timeout: 0.5
+        priority: 50
+      # ros2 run twist_mux twist_mux --ros-args --params-file /home/mr_robot/Desktop/Git/rom_robotics/rom_drivers_ws/src/ARC_ros2_control/packages/bobo_controller/config/twist_mux.yaml --remap cmd_vel_out:=/twist_mux/cmd_vel_terminal
+
+# cmd_vel_smoother_to_collision ပြင်ဆင်ရန်
