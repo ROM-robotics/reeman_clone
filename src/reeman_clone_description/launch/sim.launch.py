@@ -15,8 +15,10 @@ import os
 urdf_file_name = 'reeman_clone_fortress.urdf.xacro'
 
 def generate_launch_description():
-    robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', 'default_robot1')
-    robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '')
+    # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', 'default_robot1')
+    # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '')
+    rom_simulation = os.environ.get('ROM_SIMULATION', 'false').lower() == 'true'
+    robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '' if rom_simulation else 'default_robot1')
 
     world_file = PathJoinSubstitution([
         FindPackageShare('reeman_clone_description'),
