@@ -10,7 +10,7 @@ export ROM_ROBOT_MODEL=bobo
 
 # for Topic seperation
 #export ROM_ROBOT_NAME=default_robot1
-export ROM_ROBOT_NAMESPACE=default_robot1
+export ROM_ROBOT_NAMESPACE=''
 
 # rplidar_a1, rplidar_a2, litra_r1
 export ROM_LASER_MODEL=litra_r1
