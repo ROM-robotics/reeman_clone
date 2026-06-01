@@ -197,7 +197,7 @@ def generate_launch_description():
         ),
         DeclareLaunchArgument(
             'use_rviz',
-            default_value='false',
+            default_value='true',
             description='Launch RViz2 with sensor_check config',
         ),
         gz_resource_path,
