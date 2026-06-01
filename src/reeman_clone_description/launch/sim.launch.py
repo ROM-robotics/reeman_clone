@@ -92,9 +92,12 @@ def generate_launch_description():
         arguments=[
             '-topic', 'robot_description',
             '-name', 'diffbot',
-            '-x', '0.0',
-            '-y', '0.0',
+            '-x', '-0.4',
+            '-y', '-4.0',
             '-z', '0.15',
+            '-R', '0.00',
+            '-P', '0.00',
+            '-Y', '1.5708',
             '-allow_renaming', 'true',
         ],
     )
