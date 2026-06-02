@@ -30,6 +30,34 @@
       <direction>-0.5 0.1 -0.9</direction>
     </light>
 
+    <model name="office_polycam">
+      <static>true</static>
+      <link name="link">
+        <!-- Polycam (iPhone) exports Y-up; rotate 90° around X to convert to
+             Gazebo Z-up. Z offset +1.570 lifts the floor (Y_min=-1.570) to z=0. -->
+        <pose>0 0 1.570 1.5708 0 0</pose>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <!-- Full-resolution mesh with texture for rendering -->
+              <uri>model://reeman_clone_description/meshes/office_polycam/25_05_2026.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <!-- Simplified collision mesh (4k faces, normals included) — same approach as scanniverse.
+             Scanniverse uses 293k face single mesh and works fine with ODE.
+             4k face mesh produces fewer contact pairs → no controller timeout. -->
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://reeman_clone_description/meshes/office_polycam/25_05_2026_collision.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Ground plane: safety net if robot exits the room mesh area (prevents falling to -inf) -->
     <model name="ground_plane">
       <static>true</static>
       <link name="link">
@@ -41,20 +69,8 @@
             </plane>
           </geometry>
         </collision>
-        <visual name="visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>0.8 0.8 0.8 1</ambient>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
-            <specular>0.8 0.8 0.8 1</specular>
-          </material>
-        </visual>
       </link>
     </model>
+
   </world>
 </sdf>

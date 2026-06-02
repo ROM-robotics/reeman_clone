@@ -14,6 +14,10 @@ import os
 # urdf_file_name = 'reeman_clone.urdf.xacro'
 urdf_file_name = 'reeman_clone_fortress.urdf.xacro'
 
+#world_file_name = 'sensors_world.sdf'
+#world_file_name = 'sensors_world_scanniverse_office.sdf'
+world_flie_name = 'sensors_world_polycam_office.sdf'
+
 def generate_launch_description():
     # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', 'default_robot1')
     # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '')
@@ -23,7 +27,7 @@ def generate_launch_description():
     world_file = PathJoinSubstitution([
         FindPackageShare('reeman_clone_description'),
         'worlds',
-        'sensors_world.sdf',
+        world_flie_name,
     ])
 
     xacro_file = PathJoinSubstitution([
@@ -92,12 +96,12 @@ def generate_launch_description():
         arguments=[
             '-topic', 'robot_description',
             '-name', 'diffbot',
-            '-x', '-0.4',
-            '-y', '-4.0',
-            '-z', '0.15',
+            '-x', '0.0',
+            '-y', '0.0',
+            '-z', '0.25',
             '-R', '0.00',
             '-P', '0.00',
-            '-Y', '1.5708',
+            '-Y', '0.0',
             '-allow_renaming', 'true',
         ],
     )
