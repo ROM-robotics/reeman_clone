@@ -3,6 +3,11 @@
   <world name="sensors_world">
     <gravity>0 0 -9.8</gravity>
 
+    <scene>
+      <ambient>0.55 0.55 0.55 1.0</ambient>
+      <background>0.85 0.85 0.85 1.0</background>
+    </scene>
+
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
@@ -17,44 +22,70 @@
     <plugin filename="ignition-gazebo-imu-system" name="gz::sim::systems::Imu"/>
 
     <light type="directional" name="sun">
-      <cast_shadows>true</cast_shadows>
+      <cast_shadows>false</cast_shadows>
       <pose>0 0 10 0 0 0</pose>
-      <diffuse>0.8 0.8 0.8 1.0</diffuse>
-      <specular>0.2 0.2 0.2 1.0</specular>
+      <diffuse>0.45 0.45 0.45 1.0</diffuse>
+      <specular>0.05 0.05 0.05 1.0</specular>
       <attenuation>
         <range>1000</range>
         <constant>0.9</constant>
         <linear>0.01</linear>
         <quadratic>0.001</quadratic>
       </attenuation>
-      <direction>-0.5 0.1 -0.9</direction>
+      <direction>0 0 -1</direction>
     </light>
 
-    <model name="scaniverse_room">
+    <model name="shin_thatedat_office_floor_plan">
       <static>true</static>
       <link name="link">
-        <pose>0 0 0.111 1.5708 0 0</pose>
+        <!-- OBJ is Y-up; rotate +90° around X (new_z = Y_obj).
+             Y clusters: wall_bottom=-1.481437, actual_floor=-1.381436 (743 verts, largest).
+             Z offset +1.381436 brings actual drivable floor to Z=0. -->
+        <pose>0 0 1.381436 1.5708 0 0</pose>
         <visual name="visual">
-          <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://reeman_clone_description/meshes/scanniverse_office/room.obj</uri>
+              <uri>model://reeman_clone_description/meshes/shin_thatedat_office_floor_plan/shin_thatedat_office.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name="collision">
-          <pose>0 0 0 0 0 0</pose>
           <geometry>
             <mesh>
-              <uri>model://reeman_clone_description/meshes/scanniverse_office/room.obj</uri>
+              <uri>model://reeman_clone_description/meshes/shin_thatedat_office_floor_plan/shin_thatedat_office.obj</uri>
             </mesh>
           </geometry>
         </collision>
       </link>
     </model>
 
+    <!-- Stable drivable floor for robot physics. Adjust size to match the floor plan. -->
+    <model name="drivable_floor">
+      <static>true</static>
+      <pose>0 0 -0.01 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>20 20 0.02</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.2</mu>
+                <mu2>1.2</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+    </model>
+
+    <!-- Ground plane: safety net if robot exits the floor plan area -->
     <model name="ground_plane">
       <static>true</static>
+      <pose>0 0 -2.00 0 0 0</pose>
       <link name="link">
         <collision name="collision">
           <geometry>
@@ -64,20 +95,8 @@
             </plane>
           </geometry>
         </collision>
-        <visual name="visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>0.8 0.8 0.8 1</ambient>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
-            <specular>0.8 0.8 0.8 1</specular>
-          </material>
-        </visual>
       </link>
     </model>
+
   </world>
 </sdf>
