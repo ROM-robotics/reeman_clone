@@ -19,8 +19,8 @@ ALL
 /imu/wit/out
 /joint_state_broadcaster/transition_event
 /joint_states
-/lidar/scan
-/lidar/scan/points
+/scan
+/scan/points
 /parameter_events
 /robot_description
 /rosout
@@ -53,8 +53,8 @@ ALL
 /imu/wit/out
 /joint_state_broadcaster/transition_event
 /joint_states
-/lidar/scan
-/lidar/scan/points
+/scan
+/scan/points
 
 /robot_description
 
@@ -86,8 +86,8 @@ ALL
 /imu/wit/out
 /joint_state_broadcaster/transition_event
 /joint_states
-/lidar/scan
-/lidar/scan/points
+/scan
+/scan/points
 /robot_description
 /three_d_camera/camera_info
 /three_d_camera/depth_image

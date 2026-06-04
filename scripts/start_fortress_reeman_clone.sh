@@ -1,11 +1,3 @@
-### docker pull
-```
-docker pull romrobotics/amr:reeman_clone
-```
-
-### copy this run scripts
-#### start_fortress_reeman_clone
-```bash
 #!/usr/bin/env bash
 # Usage:
 #   ./start_fortress_reeman_clone.sh                    # namespace: myanmar_robot_1 (default)
@@ -20,6 +12,8 @@ docker stop simulator_01
 docker rm simulator_01
 xhost +local:root
 
+# Write a temp init script that sources ~/.bashrc first, then overrides the namespace.
+# Mounted read-only into the container so docker --env alone cannot be beaten by .bashrc.
 INIT_SCRIPT=$(mktemp /tmp/docker_init_XXXXX.sh)
 cat > "${INIT_SCRIPT}" <<INITEOF
 [ -f ~/.bashrc ] && source ~/.bashrc
@@ -44,37 +38,3 @@ docker run -it --network='host' \
 rm -f "${INIT_SCRIPT}"
 docker stop simulator_01
 docker rm simulator_01
-```
-
-### tmuxinator
-```tmux
-
-name: GAZEBO 
-root: ~/
-
-pre_window: export PS1=" \[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;45m\]>>>\[$(tput sgr0)\] \[$(tput sgr0)\]"
-
-# USE ROM_ROBOT_MODEL as ( bobo | yoyo | rom2109 ) in BASHRC
-# WORLDS ( shin_thatedat_office_floor_plan | shin_thatedat_office ) at ros2 launch
-
-startup_window: Main
-# startup_pane: 0
-
-windows:
-  - Main: 
-      root: ~/
-      panes:
-        - clear; source ~/.bashrc; source /tmp/docker_init.sh; ros2 launch reeman_clone_description sim.launch.py argument_1:=shin_thatedat_office_floor_plan
-  - SubscriberLists: 
-      root: ~/
-      panes:
-        - clear; source ~/.bashrc; source /tmp/docker_init.sh; sleep 10; ros2 topic subscribers_list
-  - PublisherLists: 
-      root: ~/
-      panes:
-        - clear; source ~/.bashrc; source /tmp/docker_init.sh; sleep 10; ros2 topic publishers_list
-  - DanglerOrphans: 
-      root: ~/
-      panes:
-        - clear; source ~/.bashrc; source /tmp/docker_init.sh; sleep 10; ros2 topic leaf_topics_list
-```

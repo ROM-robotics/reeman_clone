@@ -8,6 +8,8 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(robot_state_publisher REQUIRED)
 find_package(xacro REQUIRED)
 find_package(controller_manager REQUIRED)
@@ -31,8 +33,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
-
 install(
   DIRECTORY
     config
@@ -50,3 +50,29 @@ install(
     #scripts/cmd_vel_relay.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+# ── namespace_adder component ──────────────────────────────────────────────
+# Built as a shared library (composable component) for zero-copy IPC, and also
+# registered as a standalone executable via rclcpp_components_register_node.
+# add_library(namespace_adder_component SHARED
+#   src/namespace_adder.cpp
+# )
+# target_compile_features(namespace_adder_component PUBLIC cxx_std_17)
+# ament_target_dependencies(namespace_adder_component
+#   rclcpp
+#   rclcpp_components
+#   sensor_msgs
+# )
+# rclcpp_components_register_node(namespace_adder_component
+#   PLUGIN "NamespaceAdder"
+#   EXECUTABLE namespace_adder
+# )
+install(TARGETS
+  # namespace_adder_component
+  # namespace_adder
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_package()

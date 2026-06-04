@@ -4,6 +4,7 @@
   <!-- Mesh paths use `package://my_robot/...` so Gazebo can resolve them via `GZ_SIM_RESOURCE_PATH` / `IGN_GAZEBO_RESOURCE_PATH`. -->
 
   <xacro:arg name="robot_namespace" default="/"/>
+  <xacro:arg name="controller_yaml" default="$(find reeman_clone_description)/config/diff_drive_controller.yaml"/>
 
   <link name="base_footprint"/>
 
@@ -664,7 +665,7 @@
   <!-- GPU Lidar sensor (360° 2D scan) -->
   <gazebo reference="laser">
     <sensor name="gpu_lidar_sensor" type="gpu_lidar">
-      <topic>/lidar/scan</topic>
+      <topic>/scan</topic>
       <gz_frame_id>laser</gz_frame_id>
       <update_rate>10</update_rate>
       <lidar>
@@ -700,10 +701,10 @@
 
   <gazebo>
     <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-      <!-- <ros>
-        <namespace>"default_robot1"</namespace>
-      </ros> -->
-      <parameters>$(find reeman_clone_description)/config/diff_drive_controller.yaml</parameters>
+      <ros>
+        <namespace>$(arg robot_namespace)</namespace>
+      </ros>
+      <parameters>$(arg controller_yaml)</parameters>
     </plugin>
   </gazebo>
 </robot>

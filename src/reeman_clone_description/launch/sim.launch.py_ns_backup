@@ -131,8 +131,8 @@ def generate_launch_description():
             f'/{robot_namespace}/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
             f'/{robot_namespace}/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
             # 2D Lidar
-            f'/{robot_namespace}/lidar/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-            f'/{robot_namespace}/lidar/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            f'/{robot_namespace}/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+            f'/{robot_namespace}/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
             # 3D Camera (RGBD)
             f'/{robot_namespace}/three_d_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
             f'/{robot_namespace}/three_d_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',

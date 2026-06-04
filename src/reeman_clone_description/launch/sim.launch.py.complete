@@ -10,19 +10,73 @@ from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
 import os
+import sys
+
+def _get_launch_arg(name, default=''):
+    prefix = f'{name}:='
+    for arg in sys.argv:
+        if arg.startswith(prefix):
+            return arg[len(prefix):]
+    return default
+
+argument_1 = _get_launch_arg('argument_1', default='')
 
 # urdf_file_name = 'reeman_clone.urdf.xacro'
 urdf_file_name = 'reeman_clone_fortress.urdf.xacro'
 
+
 # world_file_name = 'sensors_world.sdf'
 # world_file_name = 'sensors_world_scanniverse_office.sdf'
-world_file_name = 'sensors_world_polycam_office.sdf'
+world_file_name = 'sensors_world_shin_thatedat_office.sdf'
+# world_file_name = 'sensors_world_polycam_office.sdf'
+
+if (argument_1 == 'original'):
+    world_file_name = 'sensors_world.sdf'
+    robot_position = {
+        '-x': '0.5',
+        '-y': '4.0',
+        '-z': '0.015',
+        '-R': '0.00',
+        '-P': '0.00',
+        '-Y': '-1.5708',
+    }
+elif (argument_1 == 'shin_thatedat_office_floor_plan'):
+    world_file_name = 'sensors_world_shin_thatedat_office.sdf'
+    robot_position = {
+        '-x': '-0.7',
+        '-y': '-6.0',
+        '-z': '0.02',
+        '-R': '0.00',
+        '-P': '0.00',
+        '-Y': '1.5708',
+    }
+elif (argument_1 == 'shin_thatedat_office'):
+    world_file_name = 'sensors_world_polycam_office.sdf'
+    robot_position = {
+        '-x': '0.5',
+        '-y': '4.0',
+        '-z': '0.015',
+        '-R': '0.00',
+        '-P': '0.00',
+        '-Y': '-1.5708',
+    }
+else:
+    world_file_name = 'sensors_world.sdf'  # default world file
+    robot_position = {
+        '-x': '0.5',
+        '-y': '4.0',
+        '-z': '0.015',
+        '-R': '0.00',
+        '-P': '0.00',
+        '-Y': '-1.5708',
+    }
 
 def generate_launch_description():
     # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', 'default_robot1')
     # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '')
-    rom_simulation = os.environ.get('ROM_SIMULATION', 'false').lower() == 'true'
-    robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '' if rom_simulation else 'default_robot1')
+    # rom_simulation = os.environ.get('ROM_SIMULATION', 'false').lower() == 'true'
+    # robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', '' if rom_simulation else 'default_robot1')
+    robot_namespace = os.environ.get('ROM_ROBOT_NAMESPACE', 'default_robot1')
 
     world_file = PathJoinSubstitution([
         FindPackageShare('reeman_clone_description'),
@@ -95,13 +149,13 @@ def generate_launch_description():
         parameters=[{'use_sim_time': True}],
         arguments=[
             '-topic', 'robot_description',
-            '-name', 'diffbot',
-            '-x', '0.5',
-            '-y', '4.0',
-            '-z', '0.015',
-            '-R', '0.00',
-            '-P', '0.00',
-            '-Y', '-1.5708',
+            '-name', robot_namespace if robot_namespace else 'reeman_clone',
+            '-x', robot_position['-x'],
+            '-y', robot_position['-y'],
+            '-z', robot_position['-z'],
+            '-R', robot_position['-R'],
+            '-P', robot_position['-P'],
+            '-Y', robot_position['-Y'],
             '-allow_renaming', 'true',
         ],
     )
@@ -145,8 +199,8 @@ def generate_launch_description():
             '/camera/image_raw@sensor_msgs/msg/Image[gz.msgs.Image',
             '/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo',
             # 2D Lidar
-            '/lidar/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
-            '/lidar/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
+            '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
+            '/scan/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked',
             # 3D Camera (RGBD)
             '/three_d_camera/image@sensor_msgs/msg/Image[gz.msgs.Image',
             '/three_d_camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image',
