@@ -14,12 +14,22 @@ docker pull romrobotics/amr:reeman_clone
 # NOTE: bash --init-file is used so that our namespace wins over any hardcoded
 #       export inside the container's ~/.bashrc.
 
+CONTAINER_NAME=sim_rom_01_gz_prod
+IMAGE=romrobotics/gz_fortress_ubun22_humble:reeman_clone
+
 ROBOT_NS="${1:-myanmar_robot_1}"
 
-docker stop simulator_01
-docker rm simulator_01
+# ── Stop and remove existing container if running ────────────────────────────
+if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    echo "[start] Stopping and removing existing container: ${CONTAINER_NAME}"
+    docker stop "${CONTAINER_NAME}"
+    docker rm   "${CONTAINER_NAME}"
+fi
+
 xhost +local:root
 
+# Write a temp init script that sources ~/.bashrc first, then overrides the namespace.
+# Mounted read-only into the container so docker --env alone cannot be beaten by .bashrc.
 INIT_SCRIPT=$(mktemp /tmp/docker_init_XXXXX.sh)
 cat > "${INIT_SCRIPT}" <<INITEOF
 [ -f ~/.bashrc ] && source ~/.bashrc
@@ -37,13 +47,19 @@ docker run -it --network='host' \
   --volume='/tmp/.X11-unix:/tmp/.X11-unix:rw' \
   --volume='/home/mr_robot/Desktop/Git/reeman_clone/src:/home/mr_robot/ros2_ws/src' \
   --volume="${INIT_SCRIPT}:/tmp/docker_init.sh:ro" \
-  --name simulator_01 \
-  romrobotics/gz_fortress_ubun22_humble:reeman_clone \
-  bash --init-file /tmp/docker_init.sh
+  --name "${CONTAINER_NAME}" \
+  "${IMAGE}" \
+  bash -c "source /opt/ros/humble/setup.bash && source /tmp/docker_init.sh && cd /home/mr_robot && tmuxinator"
 
 rm -f "${INIT_SCRIPT}"
-docker stop simulator_01
-docker rm simulator_01
+
+# ── Stop and remove existing container if running ────────────────────────────
+if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
+    echo "[start] Stopping and removing existing container: ${CONTAINER_NAME}"
+    docker stop "${CONTAINER_NAME}"
+    docker rm   "${CONTAINER_NAME}"
+fi
+
 ```
 
 ### tmuxinator
