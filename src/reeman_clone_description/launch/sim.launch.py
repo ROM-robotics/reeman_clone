@@ -58,7 +58,7 @@ urdf_file_name = 'reeman_clone_fortress.urdf.xacro'
 world_file_name = 'sensors_world_shin_thatedat_office.sdf'
 # world_file_name = 'sensors_world_polycam_office.sdf'
 
-if (argument_1 == 'original'):
+if (argument_1 == 'empty_world'):
     world_file_name = 'sensors_world.sdf'
     robot_position = {
         '-x': '0.5',
