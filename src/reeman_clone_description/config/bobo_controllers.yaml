@@ -1,0 +1,105 @@
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    gpio_controller:
+      type: stm32f4_system_interface_gpio/GPIOController
+
+/**/diff_controller:
+  ros__parameters:
+    use_sim_time: true
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    wheel_separation: 0.365
+    #wheels_per_side: 1  # actually 2, but both are controlled by 1 signal
+    wheel_radius: 0.085
+
+    wheel_separation_multiplier: 1.0
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_footprint
+    pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 0.01]
+    twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 0.01]
+
+    open_loop: false
+    enable_odom_tf: true
+    position_feedback: true
+
+    tf_frame_prefix_enable: false
+    tf_frame_prefix: ""
+
+    cmd_vel_timeout: 0.5
+    #publish_limited_velocity: true
+    use_stamped_vel: false
+    velocity_rolling_window_size: 1
+
+    # Velocity and acceleration limits
+    # Whenever a min_* is unspecified, default to -max_*
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.has_jerk_limits: false
+    linear.x.max_velocity: 1.5
+    linear.x.min_velocity: -1.5
+    linear.x.max_acceleration: 3.0
+    linear.x.max_jerk: 0.0
+    linear.x.min_jerk: 0.0
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.has_jerk_limits: false
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+    angular.z.max_acceleration: 1.0
+    angular.z.min_acceleration: -1.0
+    angular.z.max_jerk: 0.0
+    angular.z.min_jerk: 0.0
+
+/**/gpio_controller:
+  ros__parameters:
+    inputs:
+     - led1/digital_status
+     - led2/digital_status
+     - led3/digital_status
+     - led4/digital_status
+     - gpio1/digital_status
+     - gpio2/digital_status
+     - gpio3/digital_status
+     - gpio4/digital_status
+     - adc1/digital_status
+     - adc2/digital_status
+     - estop/digital_status
+     - shutdown/digital_status
+     - bump/digital_status
+     - temperature/digital_status
+     - volt/digital_status
+     - ampere/digital_status
+     - cliff/digital_status
+     - ir/digital_status
+     - yaw_velocity/digital_status
+     - yaw_heading/digital_status
+    outputs:
+     - led1/digital_command
+     - led2/digital_command
+     - led3/digital_command
+     - led4/digital_command
+     - gpio1/digital_command
+     - gpio2/digital_command
+     - gpio3/digital_command
+     - gpio4/digital_command
+     - adc1/digital_command
+     - adc2/digital_command
+     - estop/digital_command
+     - shutdown/digital_command
+
+/**/joint_state_broadcaster:
+  ros__parameters: {}

@@ -108,7 +108,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
-            'diff_drive_controller',
+            'diff_controller',
             '--controller-manager', cm_name,
             '--controller-manager-timeout', '120',
         ],

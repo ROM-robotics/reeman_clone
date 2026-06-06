@@ -11,9 +11,9 @@ ALL
 /cmd_vel_stt_to_twist
 /cmd_vel_voice_command
 /diagnostics
-/diff_drive_controller/cmd_vel_unstamped
-/diff_drive_controller/odom
-/diff_drive_controller/transition_event
+/diff_controller/cmd_vel_unstamped
+/diff_controller/odom
+/diff_controller/transition_event
 /dynamic_joint_states
 /imu/out
 /imu/wit/out
@@ -45,9 +45,9 @@ ALL
 /cmd_vel_stt_to_twist
 /cmd_vel_voice_command
 
-/diff_drive_controller/cmd_vel_unstamped
-/diff_drive_controller/odom
-/diff_drive_controller/transition_event
+/diff_controller/cmd_vel_unstamped
+/diff_controller/odom
+/diff_controller/transition_event
 /dynamic_joint_states
 /imu/out
 /imu/wit/out
@@ -78,9 +78,9 @@ ALL
 /cmd_vel_smoother_to_collision
 /cmd_vel_stt_to_twist
 /cmd_vel_voice_command
-/diff_drive_controller/cmd_vel_unstamped
-/diff_drive_controller/odom
-/diff_drive_controller/transition_event
+/diff_controller/cmd_vel_unstamped
+/diff_controller/odom
+/diff_controller/transition_event
 /dynamic_joint_states
 /imu/out
 /imu/wit/out

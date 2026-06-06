@@ -6,10 +6,10 @@ controller_manager:
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
-    diff_drive_controller:
+    diff_controller:
       type: diff_drive_controller/DiffDriveController
 
-diff_drive_controller:
+diff_controller:
   ros__parameters:
     use_sim_time: true
     publish_rate: 50.0

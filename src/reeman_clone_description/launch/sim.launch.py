@@ -216,7 +216,7 @@ def generate_launch_description():
         package='controller_manager',
         executable='spawner',
         arguments=[
-            'diff_drive_controller',
+            'diff_controller',
             '--controller-manager', cm_name,
             '--controller-manager-timeout', '120',
         ],
@@ -284,7 +284,7 @@ def generate_launch_description():
         package="twist_mux",
         executable="twist_mux",
         parameters=[twist_mux_params],
-        remappings=[('cmd_vel_out', f'/{robot_namespace}/diff_drive_controller/cmd_vel_unstamped' if robot_namespace else '/diff_drive_controller/cmd_vel_unstamped')]
+        remappings=[('cmd_vel_out', f'/{robot_namespace}/diff_controller/cmd_vel_unstamped' if robot_namespace else '/diff_controller/cmd_vel_unstamped')]
     )
 
     base_rviz_config = os.path.join(
