@@ -28,11 +28,11 @@ diff_controller:
     wheel_radius: 0.085
 
     linear.x.has_velocity_limits: true
-    linear.x.max_velocity: 1.5
+    linear.x.max_velocity: 1.0
     linear.x.has_acceleration_limits: true
-    linear.x.max_acceleration: 3.0
+    linear.x.max_acceleration: 0.5
 
     angular.z.has_velocity_limits: true
-    angular.z.max_velocity: 4.0
+    angular.z.max_velocity: 1.5
     angular.z.has_acceleration_limits: true
-    angular.z.max_acceleration: 8.0
+    angular.z.max_acceleration: 1.0

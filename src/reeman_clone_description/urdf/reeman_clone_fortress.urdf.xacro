@@ -59,18 +59,14 @@
   <link
     name="base_link">
     <inertial>
-      <origin
-        xyz="-0.006381 0.0039481 0.0009"
-        rpy="0 0 0" />
-      <mass
-        value="0.2471" />
-      <inertia
-        ixx="0.0033314"
-        ixy="-3.3441E-08"
-        ixz="-4.1779E-18"
-        iyy="0.0049517"
-        iyz="-2.0567E-19"
-        izz="0.008283" />
+      <origin xyz="-0.02 0.0 -0.05" rpy="0 0 0" />
+      <mass value="10.0" /> <inertia
+        ixx="0.077"
+        ixy="0"
+        ixz="0"
+        iyy="0.108"
+        iyz="0"
+        izz="0.161" />
     </inertial>
     <visual>
       <origin
@@ -470,10 +466,10 @@
         </friction>
         <contact>
           <ode>
-            <kp>2e5</kp>
-            <kd>20.0</kd>
-            <max_vel>0.03</max_vel>
-            <min_depth>0.0003</min_depth>
+            <kp>1e7</kp>
+            <kd>1.0</kd>
+            <max_vel>0.01</max_vel>
+            <min_depth>0.001</min_depth>
           </ode>
         </contact>
       </surface>
@@ -498,10 +494,10 @@
         </friction>
         <contact>
           <ode>
-            <kp>2e5</kp>
-            <kd>20.0</kd>
-            <max_vel>0.03</max_vel>
-            <min_depth>0.0003</min_depth>
+            <kp>1e7</kp>
+            <kd>1.0</kd>
+            <max_vel>0.01</max_vel>
+            <min_depth>0.001</min_depth>
           </ode>
         </contact>
       </surface>
@@ -515,7 +511,7 @@
         <friction>
           <ode><mu>0.0</mu><mu2>0.0</mu2></ode>
         </friction>
-        <contact><ode><kp>1e5</kp><kd>10</kd></ode></contact>
+	<contact><ode><kp>1e7</kp><kd>1.0</kd><max_vel>0.01</max_vel><min_depth>0.001</min_depth></ode></contact>
       </surface>
     </collision>
   </gazebo>
@@ -526,7 +522,7 @@
         <friction>
           <ode><mu>0.0</mu><mu2>0.0</mu2></ode>
         </friction>
-        <contact><ode><kp>1e5</kp><kd>10</kd></ode></contact>
+	<contact><ode><kp>1e7</kp><kd>1.0</kd><max_vel>0.01</max_vel><min_depth>0.001</min_depth></ode></contact>
       </surface>
     </collision>
   </gazebo>
@@ -537,7 +533,7 @@
         <friction>
           <ode><mu>0.0</mu><mu2>0.0</mu2></ode>
         </friction>
-        <contact><ode><kp>1e5</kp><kd>10</kd></ode></contact>
+	<contact><ode><kp>1e7</kp><kd>1.0</kd><max_vel>0.01</max_vel><min_depth>0.001</min_depth></ode></contact>
       </surface>
     </collision>
   </gazebo>
@@ -548,7 +544,7 @@
         <friction>
           <ode><mu>0.0</mu><mu2>0.0</mu2></ode>
         </friction>
-        <contact><ode><kp>1e5</kp><kd>10</kd></ode></contact>
+	<contact><ode><kp>1e7</kp><kd>1.0</kd><max_vel>0.01</max_vel><min_depth>0.001</min_depth></ode></contact>
       </surface>
     </collision>
   </gazebo>
