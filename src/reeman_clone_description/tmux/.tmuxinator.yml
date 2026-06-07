@@ -1,0 +1,30 @@
+# ./.tmuxinator.yml
+
+name: GAZEBO 
+root: ~/
+
+pre_window: export PS1=" \[$(tput sgr0)\]\[$(tput bold)\]\[\033[38;5;45m\]>>>\[$(tput sgr0)\] \[$(tput sgr0)\]"
+
+# USE ROM_ROBOT_MODEL as ( bobo | yoyo | rom2109 ) in BASHRC
+# WORLDS ( shin_thatedat_office_floor_plan | shin_thatedat_office | empty_world ) at ros2 launch
+
+startup_window: Main
+# startup_pane: 0
+
+windows:
+  - Main: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; source /tmp/docker_init.sh; ros2 launch reeman_clone_description sim.launch.py argument_1:=shin_thatedat_office_floor_plan
+  - Rviz: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; source /tmp/docker_init.sh; sleep 20; ros2 run rviz2 rviz2 -d /home/mr_robot/ros2_ws/src/reeman_clone_description/rviz/navigation.rviz 
+  - PublisherLists: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; source /tmp/docker_init.sh; #sleep 10; ros2 topic publishers_list
+  - DanglerOrphans: 
+      root: ~/
+      panes:
+        - clear; source ~/.bashrc; source /tmp/docker_init.sh; #sleep 10; ros2 topic leaf_topics_list
